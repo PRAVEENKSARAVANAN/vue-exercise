@@ -21,7 +21,7 @@
   </div>
 </template>
 
-<script lang="ts">
+<script>
 import Vue from 'vue'
 import KCard from '@kongponents/kcard'
 import axios from 'axios'
@@ -39,10 +39,21 @@ export default Vue.extend({
     }
   },
   watch: {
-    searchTerm (val) {
-      console.log(val)
-    }
-  },
+     searchTerm (val) {
+      if(val.length === 0 ) {
+        this.fetchServices();
+        return;
+      }
+      val = new RegExp(val, "gi");
+
+      this.services = this.services.filter((item) => {
+        if(item.name.search(val) > -1  || item.description.search(val) > -1){
+          return item;
+        }
+        return;
+      }
+      )
+  }},
   mounted () {
     this.fetchServices()
   },
@@ -53,7 +64,8 @@ export default Vue.extend({
       })
     }
   }
-})
+  
+  })
 </script>
 
 <style lang="scss">
