@@ -6,7 +6,7 @@
     >
     <div class="catalog">
       <KCard
-        v-for="service in services"
+        v-for="service in filteredServices"
         :key="service.id"
         class="service"
       >
@@ -40,13 +40,9 @@ export default Vue.extend({
   },
   watch: {
      searchTerm (val) {
-      if(val.length === 0 ) {
-        this.fetchServices();
-        return;
-      }
+      
       val = new RegExp(val, "gi");
-
-      this.services = this.services.filter((item) => {
+      this.filteredServices = this.services.filter((item) => {
         if(item.name.search(val) > -1  || item.description.search(val) > -1){
           return item;
         }
@@ -61,6 +57,7 @@ export default Vue.extend({
     fetchServices () {
       axios.get('/api/service_packages').then((res) => {
         this.services = res.data
+        this.filteredServices = res.data
       })
     }
   }
